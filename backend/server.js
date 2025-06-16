@@ -1,23 +1,33 @@
-// Importer le framework Express
 import express from 'express';
+import { initDb } from './database.js'; // Importer notre initialisateur de DB
+import notesRoutes from './routes/notes.routes.js'; // Importer la fonction du routeur
 
-// Définir le port d'écoute. Soit celui défini dans l'environnement, soit 5000 par défaut.
+// Définir le port
 const PORT = process.env.PORT || 5000;
-
-// Créer une instance de l'application Express
 const app = express();
 
-// Middleware pour permettre à Express de lire le JSON envoyé dans les requêtes (body-parser)
+// Middleware pour le JSON
 app.use(express.json());
 
-// Définition d'une route de test sur la racine de l'API
-// GET http://localhost:5000/api/
-app.get('/api/', (req, res) => {
-  // On répond avec un simple message JSON pour confirmer que ça fonctionne
-  res.json({ message: "Bienvenue sur l'API de votre Jardin Numérique !" });
-});
+// Fonction principale pour démarrer le serveur
+async function startServer() {
+  // Initialiser la base de données et récupérer l'objet de connexion
+  const db = await initDb();
 
-// Démarrer le serveur et écouter les requêtes sur le port défini
-app.listen(PORT, () => {
-  console.log(`✅ Serveur démarré sur le port ${PORT}`);
-});
+  // Route de test
+  app.get('/api/', (req, res) => {
+    res.json({ message: "Bienvenue sur l'API de votre Jardin Numérique !" });
+  });
+
+  // Utiliser le routeur pour les notes
+  // Toutes les routes définies dans notes.routes.js seront préfixées par /api/notes
+  app.use('/api/notes', notesRoutes(db));
+
+  // Démarrer le serveur
+  app.listen(PORT, () => {
+    console.log(`✅ Serveur démarré sur le port ${PORT}`);
+  });
+}
+
+// Lancer le serveur
+startServer();
