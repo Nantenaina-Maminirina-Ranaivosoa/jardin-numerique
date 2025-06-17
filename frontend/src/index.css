@@ -73,3 +73,25 @@ header h1 {
 .note-item h2 {
   margin-top: 0;
 }
+
+.note-item {
+  /* ... autres styles ... */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delete-button {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  background-color: #e74c3c;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.delete-button:hover {
+  background-color: #c0392b;
+}
