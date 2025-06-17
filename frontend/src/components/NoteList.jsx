@@ -1,7 +1,8 @@
 import React from 'react';
+import NoteItem from './NoteItem'; // On importe le nouveau composant
 
-// Le composant reçoit maintenant une deuxième fonction via ses props : onNoteDeleted
-function NoteList({ notes, onNoteDeleted }) {
+// NoteList devient un simple "passe-plat"
+function NoteList({ notes, onNoteDeleted, onNoteUpdated }) {
   if (notes.length === 0) {
     return <p>Aucune note pour le moment. Créez-en une !</p>;
   }
@@ -9,19 +10,12 @@ function NoteList({ notes, onNoteDeleted }) {
   return (
     <ul className="note-list">
       {notes.map(note => (
-        <li key={note.id} className="note-item">
-          <div className="note-content">
-            <h2>{note.title}</h2>
-            <p>Créé le: {new Date(note.created_at).toLocaleDateString('fr-FR')}</p>
-          </div>
-          {/* On ajoute le bouton de suppression */}
-          <button 
-            className="delete-button"
-            onClick={() => onNoteDeleted(note.id)}
-          >
-            Supprimer
-          </button>
-        </li>
+        <NoteItem 
+          key={note.id}
+          note={note}
+          onNoteDeleted={onNoteDeleted}
+          onNoteUpdated={onNoteUpdated}
+        />
       ))}
     </ul>
   );

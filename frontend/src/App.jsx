@@ -48,6 +48,28 @@ function App() {
     }
   };
 
+  // NOUVELLE FONCTION : pour gérer la mise à jour
+  const handleNoteUpdated = async (id, updatedData) => {
+    try {
+      const response = await fetch(`/api/notes/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedData)
+      });
+      if (!response.ok) throw new Error('Erreur lors de la mise à jour');
+      
+      // Mettre à jour la liste des notes dans l'état
+      setNotes(prevNotes => 
+        prevNotes.map(note => 
+          note.id === id ? { ...note, ...updatedData, updated_at: new Date().toISOString() } : note
+        )
+      );
+    } catch (error) {
+      console.error("Erreur de mise à jour:", error);
+    }
+  };
+
+
   return (
     <div className="container">
       <header>
@@ -62,7 +84,8 @@ function App() {
           {!loading && !error && (
             <NoteList 
               notes={notes} 
-              onNoteDeleted={handleNoteDeleted} // On passe la fonction en prop
+              onNoteDeleted={handleNoteDeleted}
+              onNoteUpdated={handleNoteUpdated} // On passe la nouvelle fonction
             />
           )}
         </div>

@@ -75,7 +75,6 @@ header h1 {
 }
 
 .note-item {
-  /* ... autres styles ... */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -95,3 +94,49 @@ header h1 {
 .delete-button:hover {
   background-color: #c0392b;
 }
+
+.note-item p {
+  color: #555;
+  white-space: pre-wrap; /* Respecte les sauts de ligne du textarea */
+}
+
+.note-item small {
+  color: #95a5a6;
+}
+
+.note-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 90px;
+}
+
+.note-actions button {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+  width: 100%;
+}
+
+.edit-button { background-color: #3498db; }
+.edit-button:hover { background-color: #2980b9; }
+
+.note-item.editing {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.note-item.editing .note-actions {
+  flex-direction: row;
+  margin-top: 1rem;
+}
+
+.save-button { background-color: #2ecc71; }
+.save-button:hover { background-color: #27ae60; }
+
+.cancel-button { background-color: #7f8c8d; }
+.cancel-button:hover { background-color: #6c7a7b; }
