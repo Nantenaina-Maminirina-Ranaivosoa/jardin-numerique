@@ -1,54 +1,57 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
+import NoteList from './components/NoteList';   // Importer NoteList
+import NoteForm from './components/NoteForm';   // Importer NoteForm
 
 function App() {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // useEffect pour récupérer les données au chargement du composant
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        // Grâce au proxy, on peut appeler notre API directement
-        const response = await fetch('/api/notes');
-        
-        if (!response.ok) {
-          throw new Error('La réponse du réseau n\'était pas ok');
-        }
-
+        const response = await fetch("/api/notes");
+        if (!response.ok)
+          throw new Error("La réponse du réseau n'était pas ok");
         const data = await response.json();
-        setNotes(data); // On met à jour l'état avec les notes reçues
+        setNotes(data);
       } catch (error) {
-        setError(error.message); // On stocke le message d'erreur
+        setError(error.message);
       } finally {
-        setLoading(false); // On arrête le chargement dans tous les cas
+        setLoading(false);
       }
     };
-
     fetchNotes();
-  }, []); // Le tableau vide signifie que cet effet ne s'exécute qu'une seule fois
+  }, []);
+
+  // Cette fonction sera passée en prop à NoteForm
+  const handleNoteCreated = (newNote) => {
+    // On met à jour l'état des notes en ajoutant la nouvelle au début de la liste
+    setNotes(prevNotes => [newNote, ...prevNotes]);
+  };
+
 
   return (
-    <div>
+    <div className="container">
       <header>
         <h1>Mon Jardin Numérique</h1>
       </header>
       <main>
-        {loading && <p>Chargement des notes...</p>}
-        {error && <p style={{ color: 'red' }}>Erreur: {error}</p>}
-        {!loading && !error && (
-          <ul>
-            {notes.map(note => (
-              <li key={note.id}>
-                <h2>{note.title}</h2>
-                <small>Créé le: {new Date(note.created_at).toLocaleDateString()}</small>
-              </li>
-            ))}
-          </ul>
-        )}
+{/* On passe la fonction de mise à jour au formulaire */}
+        <NoteForm onNoteCreated={handleNoteCreated} />
+
+        <div className="notes-section">
+          <h2>Mes Notes</h2>
+          {loading && <p>Chargement des notes...</p>}
+          {error && <p style={{ color: 'red' }}>Erreur: {error}</p>}
+          {!loading && !error && (
+            /* On passe la liste des notes à notre composant d'affichage */
+            <NoteList notes={notes} />
+          )}
+        </div>
       </main>
     </div>
   )
 }
 
-export default App
+export default App;
